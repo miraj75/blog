@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Miraj Uddin's Blog</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Miraj's Blog</h1>
+    </header>
+
+    <nav>
+      <a href="#new-post">New Post</a>
+      <a href="#blog">Blog</a>
+    </nav>
+
+    <div class="container">
+      <section id="new-post">
+        <h2>New Post</h2>
+        <form id="new-post-form">
+          <input
+            type="text"
+            id="post-title"
+            placeholder="Post Title"
+            required
+          />
+          <textarea
+            id="post-content"
+            placeholder="Write your post here..."
+            required
+          ></textarea>
+          <input type="file" id="post-image" accept="image/*" />
+          <button type="submit">Post</button>
+        </form>
+      </section>
+
+      <section id="blog">
+        <h2>Blog</h2>
+        <div id="posts"></div>
+      </section>
+    </div>
+    <br /><br /><br /><br /><br />
+    <footer>
+      <p>&copy; 2024 Miraj Uddin. All Rights Reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

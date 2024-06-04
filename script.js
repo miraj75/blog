@@ -6,12 +6,11 @@ document.getElementById('new-post-form').addEventListener('submit', function(e) 
     const image = document.getElementById('post-image').files[0];
 
     addPost(title, content, image);
-    savePosts();
 
     document.getElementById('new-post-form').reset();
 });
 
-function addPost(title, content, image, imageDataUrl = null) {
+function addPost(title, content, image) {
     const postsContainer = document.getElementById('posts');
 
     const postDiv = document.createElement('div');
@@ -26,32 +25,28 @@ function addPost(title, content, image, imageDataUrl = null) {
     postDiv.appendChild(postTitle);
     postDiv.appendChild(postContent);
 
-    if (image || imageDataUrl) {
+    if (image) {
         const postImage = document.createElement('img');
-        if (imageDataUrl) {
-            postImage.src = imageDataUrl;
-        } else {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                postImage.src = e.target.result;
-                savePosts();
-            };
-            reader.readAsDataURL(image);
-        }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            postImage.src = e.target.result;
+        };
+        reader.readAsDataURL(image);
         postDiv.appendChild(postImage);
     }
 
     const editButton = document.createElement('button');
+    editButton.id = 'editID'
     editButton.innerText = 'Edit';
     editButton.onclick = function() {
-        editPost(postDiv, postTitle, postContent, postDiv.querySelector('img'));
+        editPost(postDiv, postTitle, postContent, image);
     };
 
     const deleteButton = document.createElement('button');
+    deleteButton.id = 'deleteID'
     deleteButton.innerText = 'Delete';
     deleteButton.onclick = function() {
         deletePost(postDiv);
-        savePosts();
     };
 
     postDiv.appendChild(editButton);
@@ -103,7 +98,6 @@ function saveEdit(postDiv, postTitle, postContent, postImage, titleInput, conten
         const reader = new FileReader();
         reader.onload = function(e) {
             newImage.src = e.target.result;
-            savePosts();
         };
         reader.readAsDataURL(image);
         postDiv.appendChild(newImage);
@@ -114,6 +108,7 @@ function saveEdit(postDiv, postTitle, postContent, postImage, titleInput, conten
     }
 
     const editButton = document.createElement('button');
+    editButton.id = 'editID'
     editButton.innerText = 'Edit';
     editButton.onclick = function() {
         editPost(postDiv, postTitle, postContent, postImage);
@@ -121,40 +116,17 @@ function saveEdit(postDiv, postTitle, postContent, postImage, titleInput, conten
 
     const deleteButton = document.createElement('button');
     deleteButton.innerText = 'Delete';
+    deleteButton.id = 'deleteID';
     deleteButton.onclick = function() {
         deletePost(postDiv);
-        savePosts();
     };
 
     postDiv.appendChild(editButton);
     postDiv.appendChild(deleteButton);
-
-    savePosts();
 }
 
 function deletePost(postDiv) {
     if (confirm('Are you sure you want to delete this post?')) {
         postDiv.remove();
-        savePosts();
     }
 }
-
-function savePosts() {
-    const posts = [];
-    document.querySelectorAll('.post').forEach(postDiv => {
-        const title = postDiv.querySelector('h2').innerText;
-        const content = postDiv.querySelector('p').innerText;
-        const image = postDiv.querySelector('img') ? postDiv.querySelector('img').src : null;
-        posts.push({ title, content, image });
-    });
-    localStorage.setItem('posts', JSON.stringify(posts));
-}
-
-function loadPosts() {
-    const posts = JSON.parse(localStorage.getItem('posts')) || [];
-    posts.forEach(post => {
-        addPost(post.title, post.content, null, post.image);
-    });
-}
-
-document.addEventListener('DOMContentLoaded', loadPosts);
